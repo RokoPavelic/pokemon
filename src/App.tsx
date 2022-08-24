@@ -27,19 +27,18 @@ function App() {
         setPokemonOne(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        return error.message;
       });
 
     axios
       .get(`https://pokeapi.co/api/v2/pokemon/${randomPokemonTwo}`)
       .then((response) => {
         setPokemonTwo(response.data);
+        navigate("/game");
       })
       .catch((error) => {
-        console.log(error);
+        return error.message;
       });
-
-    navigate("/game");
   };
 
   return (
@@ -48,7 +47,17 @@ function App() {
         <Route path="/" element={<Home fetchPokemons={fetchPokemons} />} />
         <Route
           path="/game"
-          element={<Game pokemonOne={pokemonOne} pokemonTwo={pokemonTwo} />}
+          element={
+            pokemonOne &&
+            pokemonTwo && (
+              <Game
+                pokemonOne={pokemonOne}
+                pokemonTwo={pokemonTwo}
+                setPokemonOne={setPokemonOne}
+                setPokemonTwo={setPokemonTwo}
+              />
+            )
+          }
         />
       </Routes>
     </>

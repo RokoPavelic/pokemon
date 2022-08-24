@@ -17,24 +17,37 @@ type StatsProps = {
 const Stats: FC<StatsProps> = ({ stats }) => {
   return (
     <StatsContainer>
-      {stats?.map((stat) => (
-        <>
-          {stat.stat.name !== "special-attack" &&
-            stat.stat.name !== "special-defense" && (
-              <p>{`${stat.stat.name.toUpperCase()}: ${stat.base_stat}`}</p>
-            )}
-        </>
-      ))}
+      <Title>Stats</Title>
+      <StatsContainerInner>
+        {stats?.map((stat) => (
+          <>
+            {stat.stat.name !== "special-attack" &&
+              stat.stat.name !== "special-defense" && (
+                <p>{`${stat.stat.name.toUpperCase()}: ${stat.base_stat}`}</p>
+              )}
+          </>
+        ))}
+      </StatsContainerInner>
     </StatsContainer>
   );
 };
 
 export default Stats;
 
-const StatsContainer = styled.div`
+const StatsContainerInner = styled.div`
   background-color: #fff7d6;
   border: 2px solid #ffcc00;
-  width: 100%;
+  width: 80%;
   border-radius: 10px;
   padding: 10px;
+
+  p {
+    margin: 4px;
+  }
 `;
+
+const StatsContainer = styled.div`
+  width: 100%;
+`;
+
+const Title = styled.p``;

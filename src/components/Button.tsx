@@ -16,6 +16,8 @@ const MainButton = styled.button`
   color: white;
   border: 2px solid #73b9e5;
   border-radius: 20px;
-  height: 25px;
-  width: 100px;
+  height: 40px;
+  width: 200px;
+  cursor: pointer;
+  font-size: 20px;
 `;
