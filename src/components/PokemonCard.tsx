@@ -1,13 +1,14 @@
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
 import { PokeAPI } from "pokeapi-types";
 import styled, { keyframes } from "styled-components";
 import Stats from "./Stats";
 
 type PokemonCardProps = {
-  pokemon: PokeAPI.Pokemon | undefined;
+  pokemon: PokeAPI.Pokemon;
   side: string;
   animate: boolean;
   direction: number;
+  pokemonHealth: number;
 };
 
 type ImgProps = {
@@ -16,17 +17,30 @@ type ImgProps = {
   direction: number;
 };
 
+type HealthBarProps = {
+  health: number;
+};
+
 const PokemonCard: FC<PokemonCardProps> = ({
   pokemon,
   side,
   animate,
   direction,
+  pokemonHealth,
 }) => {
+  const [health, setHealth] = useState<number>(100);
+
+  useEffect(() => {
+    setHealth((pokemonHealth / pokemon?.stats[0].base_stat) * 100);
+  }, [pokemonHealth]);
+
   return (
     <CardContainer>
       <HealthBarContainer>
-        <HealthValue>100%</HealthValue>
-        <HealthBar></HealthBar>
+        <HealthValue>{Math.floor(health)}%</HealthValue>
+        <HealthBar health={health}>
+          <div />
+        </HealthBar>
       </HealthBarContainer>
       <p>{pokemon?.name}</p>
       {side === "left" ? (
@@ -65,12 +79,28 @@ const HealthBarContainer = styled.div`
   width: 100%;
 `;
 
-const HealthBar = styled.div`
+const HealthBar = styled.div<HealthBarProps>`
   height: 10px;
   width: 100%;
-  background: -webkit-linear-gradient(right, white 50%, red 50%);
-  border: 2px solid #079325;
+  border: 2px solid
+    ${(props) =>
+      props.health > 50
+        ? "green"
+        : props.health <= 50 && props.health > 30
+        ? "orange"
+        : "red"};
   border-radius: 6px;
+
+  div {
+    height: 100%;
+    width: ${(props) => props.health}%;
+    background-color: ${(props) =>
+      props.health > 50
+        ? "green"
+        : props.health <= 50 && props.health > 30
+        ? "orange"
+        : "red"};
+  }
 `;
 
 const HealthValue = styled.p`

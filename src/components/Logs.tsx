@@ -1,11 +1,19 @@
-import React from "react";
+import { FC } from "react";
 import styled from "styled-components";
 
-const Logs = () => {
+type LogsProps = {
+  attacking: string[];
+};
+
+const Logs: FC<LogsProps> = ({ attacking }) => {
   return (
     <LogsContainer>
       <Title>Logs:</Title>
-      <LogsContainerInner></LogsContainerInner>
+      <LogsContainerInner>
+        {attacking.map((attack) => (
+          <p>{attack}</p>
+        ))}
+      </LogsContainerInner>
     </LogsContainer>
   );
 };
