@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 import Stats from "./Stats";
 
 type PokemonCardProps = {
-  pokemon: PokeAPI.Pokemon;
+  pokemon: PokeAPI.Pokemon | undefined;
   side: string;
   animate: boolean;
   direction: number;
@@ -21,6 +21,10 @@ type HealthBarProps = {
   health: number;
 };
 
+type HealthValueProps = {
+  health: number;
+};
+
 const PokemonCard: FC<PokemonCardProps> = ({
   pokemon,
   side,
@@ -31,13 +35,14 @@ const PokemonCard: FC<PokemonCardProps> = ({
   const [health, setHealth] = useState<number>(100);
 
   useEffect(() => {
+    if (!pokemon) return;
     setHealth((pokemonHealth / pokemon?.stats[0].base_stat) * 100);
   }, [pokemonHealth]);
 
   return (
     <CardContainer>
       <HealthBarContainer>
-        <HealthValue>{Math.floor(health)}%</HealthValue>
+        <HealthValue health={health}>{Math.floor(health)}%</HealthValue>
         <HealthBar health={health}>
           <div />
         </HealthBar>
@@ -103,8 +108,13 @@ const HealthBar = styled.div<HealthBarProps>`
   }
 `;
 
-const HealthValue = styled.p`
-  color: green;
+const HealthValue = styled.p<HealthValueProps>`
+  color: ${(props) =>
+    props.health > 50
+      ? "green"
+      : props.health <= 50 && props.health > 30
+      ? "orange"
+      : "red"};
 `;
 
 const leftAttack = keyframes`

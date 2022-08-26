@@ -30,5 +30,6 @@ const LogsContainerInner = styled.div`
   border: 2px solid #ffcc00;
   border-radius: 10px;
   height: 100%;
+  overflow: scroll;
 `;
 const Title = styled.p``;

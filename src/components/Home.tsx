@@ -1,14 +1,78 @@
-import React, { FC } from "react";
+import { useEffect, useState } from "react";
 import Button from "./Button";
 import Kodimon from "../assets/kodimon 1.png";
 import kodiLogo from "../assets/Kodi-logo.svg";
 import styled from "styled-components";
+import { useGetPokemonByIDQuery } from "../app/pokemonAPI";
+import { useAppDispatch } from "../app/hooks";
+import { useNavigate } from "react-router-dom";
+import { setPokemonOne } from "../features/pokemonOneSlice";
+import { setPokemonTwo } from "../features/pokemonTwoSlice";
 
-type HomeProps = {
-  fetchPokemons: () => void;
-};
+const Home = () => {
+  const dispatch = useAppDispatch();
+  const [skip, setSkip] = useState<boolean>(true);
+  const [pokemonOneID, setPokmonOneID] = useState<string>("");
+  const [pokemonTwoID, setPokmonTwoID] = useState<string>("");
 
-const Home: FC<HomeProps> = ({ fetchPokemons }) => {
+  const navigate = useNavigate();
+
+  const fetchPokemons = () => {
+    const randomPokemonOne = Math.floor(Math.random() * 1154);
+    let randomPokemonTwo = Math.floor(Math.random() * 1154);
+
+    if (randomPokemonOne === randomPokemonTwo) {
+      randomPokemonTwo++;
+    }
+
+    setPokmonOneID(randomPokemonOne.toString());
+    setPokmonTwoID(randomPokemonTwo.toString());
+    setSkip(false);
+  };
+
+  const {
+    data: pokemonOne,
+    error: pokemonOneError,
+    isLoading: pokemonOneLoading,
+  } = useGetPokemonByIDQuery(pokemonOneID, {
+    skip,
+  });
+  const {
+    data: pokemonTwo,
+    error: pokemonTwoError,
+    isLoading: pokemonTwoLoading,
+  } = useGetPokemonByIDQuery(pokemonTwoID, {
+    skip,
+  });
+
+  useEffect(() => {
+    if (!pokemonTwo || !pokemonOne) return;
+    dispatch(setPokemonOne(pokemonOne));
+    dispatch(setPokemonTwo(pokemonTwo));
+    navigate("/game");
+  }, [pokemonTwoLoading, pokemonOneLoading]);
+
+  useEffect(() => {
+    if (pokemonOneError && pokemonTwoError) {
+      fetchPokemons();
+    } else {
+      if (pokemonOneError) {
+        let randomPokemonOne = Math.floor(Math.random() * 1154);
+        if (randomPokemonOne === pokemonTwo.id) {
+          randomPokemonOne++;
+        }
+        setPokmonOneID(randomPokemonOne.toString());
+      }
+      if (pokemonTwoError) {
+        let randomPokemonTwo = Math.floor(Math.random() * 1154);
+        if (randomPokemonTwo === pokemonOne.id) {
+          randomPokemonTwo++;
+        }
+        setPokmonTwoID(randomPokemonTwo.toString());
+      }
+    }
+  }, [pokemonOneError, pokemonTwoError]);
+
   return (
     <Start>
       <img src={kodiLogo} alt="logo" className="logo" />
