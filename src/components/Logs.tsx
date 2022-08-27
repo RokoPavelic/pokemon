@@ -1,17 +1,17 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { selectLogs } from "../features/logsSlice";
+import { useAppSelector } from "../app/hooks";
 
-type LogsProps = {
-  attacking: string[];
-};
+const Logs = () => {
+  const logs = useAppSelector(selectLogs);
 
-const Logs: FC<LogsProps> = ({ attacking }) => {
   return (
     <LogsContainer>
       <Title>Logs:</Title>
       <LogsContainerInner>
-        {attacking.map((attack) => (
-          <p>{attack}</p>
+        {logs.map((log) => (
+          <p>{log}</p>
         ))}
       </LogsContainerInner>
     </LogsContainer>
@@ -23,6 +23,9 @@ export default Logs;
 const LogsContainer = styled.div`
   width: 500px;
   height: 200px;
+  p::first-letter {
+    text-transform: capitalize;
+  }
 `;
 
 const LogsContainerInner = styled.div`
@@ -31,5 +34,8 @@ const LogsContainerInner = styled.div`
   border-radius: 10px;
   height: 100%;
   overflow: scroll;
+  padding: 10px;
 `;
-const Title = styled.p``;
+const Title = styled.p`
+  margin: 0;
+`;

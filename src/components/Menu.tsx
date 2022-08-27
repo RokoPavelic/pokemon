@@ -44,4 +44,6 @@ const MenuContainerInner = styled.div`
   padding: 10px;
 `;
 
-const Title = styled.p``;
+const Title = styled.p`
+  margin: 0;
+`;

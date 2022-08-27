@@ -2,6 +2,8 @@ import { FC, useState, useEffect } from "react";
 import { PokeAPI } from "pokeapi-types";
 import styled, { keyframes } from "styled-components";
 import Stats from "./Stats";
+import { selectLastLog } from "../features/logsSlice";
+import { useAppSelector } from "../app/hooks";
 
 type PokemonCardProps = {
   pokemon: PokeAPI.Pokemon | undefined;
@@ -9,6 +11,12 @@ type PokemonCardProps = {
   animate: boolean;
   direction: number;
   pokemonHealth: number;
+
+  defendingPokemon: PokeAPI.Pokemon | undefined;
+};
+
+type MiniLogProps = {
+  lastLog: string;
 };
 
 type ImgProps = {
@@ -31,8 +39,11 @@ const PokemonCard: FC<PokemonCardProps> = ({
   animate,
   direction,
   pokemonHealth,
+  defendingPokemon,
 }) => {
   const [health, setHealth] = useState<number>(100);
+
+  const lastLog = useAppSelector(selectLastLog);
 
   useEffect(() => {
     if (!pokemon) return;
@@ -48,6 +59,10 @@ const PokemonCard: FC<PokemonCardProps> = ({
         </HealthBar>
       </HealthBarContainer>
       <p>{pokemon?.name}</p>
+      <MiniLog lastLog={lastLog}>
+        {defendingPokemon?.name !== pokemon?.name ? lastLog : ""}
+      </MiniLog>
+
       {side === "left" ? (
         <ImgLeft
           src={pokemon?.sprites.front_shiny}
@@ -120,11 +135,29 @@ const HealthValue = styled.p<HealthValueProps>`
 const leftAttack = keyframes`
 0% {
     left: 0;
-    transform: translateX(0);
+    transform: translateY(-0%);
+    transform: rotateY(180deg)
+    
+  }
+  
+  20% {
+    left: 0;
+    transform: translateY(-20%);
+    
+  }
+  30% {
+    left: 0;
+    transform: translateY(-30%);
+   
+  }
+  40% {
+    left: 0;
+    transform: translateY(-40%);
+   
   }
 50% {
     left: 100%;
-    transform: translateX(-550%);
+    transform: translateX(-600%);
   }
 100% {
     left: 0;
@@ -135,21 +168,37 @@ const leftAttack = keyframes`
 const rightAttack = keyframes`
 0% {
     right: 0;
-    transform: translateX(0);
+    transform: translateY(-0%);
+    transform: rotateX(-180deg)
+  }
+  20% {
+    right: 0;
+    transform: translateY(-20%);
+  }
+  30% {
+    right: 0;
+    transform: translateY(-30%);
+  }
+  40% {
+    right: 0;
+    transform: translateY(-40%);
   }
 50% {
     right: 100%;
-    transform: translateX(550%);
+    transform: translateX(600%);
+   
   }
 100% {
     right: 0;
-    transform: translateX(0);
+    transform: translateY(0);
+    
   }
 `;
 
 const ImgLeft = styled.img<ImgProps>`
   animation: ${(props) => props.animate && props.direction === 0 && rightAttack}
-    2s linear;
+    2s ease-in-out;
+
   width: 150px;
   height: 150px;
 `;
@@ -157,7 +206,20 @@ const ImgLeft = styled.img<ImgProps>`
 const ImgRight = styled.img<ImgProps>`
   animation: ${(props) =>
       props.animate && props.direction === 180 && leftAttack}
-    2s linear;
+    2s ease-in-out;
   width: 150px;
   height: 150px;
+`;
+
+const MiniLog = styled.p<MiniLogProps>`
+  font-size: 35px;
+  font-weight: 700;
+  font-style: italic;
+  margin: 0;
+  padding: 0;
+  rotate: 10deg;
+  position: relative;
+  bottom: 100px;
+
+  color: ${(props) => (props.lastLog === "Miss!" ? "black" : "red")};
 `;

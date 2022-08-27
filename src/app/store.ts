@@ -1,13 +1,12 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import { pokemonApi } from './pokemonAPI'
-import counterReducer from "../features/counter/counterSlice";
+import { pokemonApi } from "./pokemonAPI";
 import pokemonOneReducer from "../features/pokemonOneSlice";
 import pokemonTwoReducer from "../features/pokemonTwoSlice";
-
+import logsSliceReducer from "../features/logsSlice";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    logs: logsSliceReducer,
     pokemonOne: pokemonOneReducer,
     pokemonTwo: pokemonTwoReducer,
     [pokemonApi.reducerPath]: pokemonApi.reducer,

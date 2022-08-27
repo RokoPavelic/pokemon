@@ -1,0 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Bellota+Text:ital,wght@0,400;0,700;1,400&display=swap");
+
+html {
+  font-family: "Bellota Text", cursive;
+  font-weight: 700;
+  font-style: italic;
+}
