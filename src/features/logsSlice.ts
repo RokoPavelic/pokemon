@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { RootState, AppThunk } from "../app/store";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../app/store";
 
 export interface logsState {
   logs: string[];
@@ -18,15 +18,16 @@ export const logsSlice = createSlice({
     setLogs: (state, action: PayloadAction<string>) => {
       state.logs = [...state.logs, action.payload];
     },
-
+    clearLogs: (state) => {
+      state.logs = [];
+    },
     setLastLog: (state, action: PayloadAction<string>) => {
       state.lastLog = action.payload;
     },
   },
 });
 
-// Action creators are generated for each case reducer function
-export const { setLogs, setLastLog } = logsSlice.actions;
+export const { setLogs, setLastLog, clearLogs } = logsSlice.actions;
 
 export const selectLogs = (state: RootState) => state.logs.logs;
 export const selectLastLog = (state: RootState) => state.logs.lastLog;

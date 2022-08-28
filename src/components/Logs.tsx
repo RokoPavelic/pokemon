@@ -1,4 +1,3 @@
-import { FC } from "react";
 import styled from "styled-components";
 import { selectLogs } from "../features/logsSlice";
 import { useAppSelector } from "../app/hooks";
@@ -10,8 +9,8 @@ const Logs = () => {
     <LogsContainer>
       <Title>Logs:</Title>
       <LogsContainerInner>
-        {logs.map((log) => (
-          <p>{log}</p>
+        {logs.map((log, i) => (
+          <p key={i}>{log}</p>
         ))}
       </LogsContainerInner>
     </LogsContainer>

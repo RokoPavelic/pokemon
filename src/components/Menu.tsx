@@ -1,20 +1,25 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { FC } from "react";
 import Button from "./Button";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
-type MenuProps = {};
+type MenuProps = {
+  fetchPokemons: () => void;
+};
 
-const Menu = () => {
+const Menu: FC<MenuProps> = ({ fetchPokemons }) => {
+  const navigate = useNavigate();
+
   return (
     <MenuContainer>
       <Title>Menu:</Title>
       <MenuContainerInner>
-        <Link to="/">
-          <Button text="Home" onClick={() => console.log("Home")} />
-        </Link>
-        <Button text="New Game" onClick={() => console.log("Home")} />
-        <Button text="New opponent" onClick={() => console.log("Home")} />
+        <Button text="Home" onClick={() => navigate("/")} />
+        <Button text="New Game" onClick={() => fetchPokemons()} />
+        <Button
+          text="New opponent"
+          onClick={() => console.log("New oponent")}
+        />
       </MenuContainerInner>
     </MenuContainer>
   );
@@ -27,8 +32,7 @@ const MenuContainer = styled.div`
   flex-direction: column;
   height: 220px;
   width: 250px;
-
-  margin-left: 2em;
+  margin-top: 1.5em;
 `;
 
 const MenuContainerInner = styled.div`

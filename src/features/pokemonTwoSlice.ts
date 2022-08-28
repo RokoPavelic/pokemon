@@ -1,13 +1,15 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PokeAPI } from "pokeapi-types";
-import { RootState, AppThunk } from "../app/store";
+import { RootState } from "../app/store";
 
 export interface pokemonTwoState {
   value: PokeAPI.Pokemon | undefined;
+  pokemonTwoID: string;
 }
 
 const initialState: pokemonTwoState = {
   value: undefined,
+  pokemonTwoID: "",
 };
 
 export const pokemonTwoSlice = createSlice({
@@ -17,12 +19,17 @@ export const pokemonTwoSlice = createSlice({
     setPokemonTwo: (state, action: PayloadAction<PokeAPI.Pokemon>) => {
       state.value = action.payload;
     },
+    setPokemonTwoID: (state, action: PayloadAction<number>) => {
+      state.pokemonTwoID = action.payload.toString();
+    },
   },
 });
 
-// Action creators are generated for each case reducer function
-export const { setPokemonTwo } = pokemonTwoSlice.actions;
+export const { setPokemonTwo, setPokemonTwoID } = pokemonTwoSlice.actions;
 
 export const selectPokemonTwo = (state: RootState) => state.pokemonTwo.value;
+
+export const selectPokemonTwoID = (state: RootState) =>
+  state.pokemonTwo.pokemonTwoID;
 
 export default pokemonTwoSlice.reducer;

@@ -19,13 +19,13 @@ const Stats: FC<StatsProps> = ({ stats }) => {
     <StatsContainer>
       <Title>Stats</Title>
       <StatsContainerInner>
-        {stats?.map((stat) => (
-          <>
+        {stats?.map((stat, i) => (
+          <div key={i}>
             {stat.stat.name !== "special-attack" &&
               stat.stat.name !== "special-defense" && (
                 <p>{`${stat.stat.name.toUpperCase()}: ${stat.base_stat}`}</p>
               )}
-          </>
+          </div>
         ))}
       </StatsContainerInner>
     </StatsContainer>
@@ -37,7 +37,7 @@ export default Stats;
 const StatsContainerInner = styled.div`
   background-color: #fff7d6;
   border: 2px solid #ffcc00;
-  width: 80%;
+  width: 90%;
   border-radius: 10px;
   padding: 10px;
 

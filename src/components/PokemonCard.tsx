@@ -17,6 +17,7 @@ type PokemonCardProps = {
 
 type MiniLogProps = {
   lastLog: string;
+  side: string;
 };
 
 type ImgProps = {
@@ -59,7 +60,7 @@ const PokemonCard: FC<PokemonCardProps> = ({
         </HealthBar>
       </HealthBarContainer>
       <p>{pokemon?.name}</p>
-      <MiniLog lastLog={lastLog}>
+      <MiniLog side={side} lastLog={lastLog}>
         {defendingPokemon?.name !== pokemon?.name ? lastLog : ""}
       </MiniLog>
 
@@ -88,6 +89,7 @@ const PokemonCard: FC<PokemonCardProps> = ({
 export default PokemonCard;
 
 const CardContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -105,9 +107,9 @@ const HealthBar = styled.div<HealthBarProps>`
   border: 2px solid
     ${(props) =>
       props.health > 50
-        ? "green"
+        ? "#079325"
         : props.health <= 50 && props.health > 30
-        ? "orange"
+        ? "#FFCC00"
         : "red"};
   border-radius: 6px;
 
@@ -116,14 +118,19 @@ const HealthBar = styled.div<HealthBarProps>`
     width: ${(props) => props.health}%;
     background-color: ${(props) =>
       props.health > 50
-        ? "green"
+        ? "#62FF84"
         : props.health <= 50 && props.health > 30
         ? "orange"
-        : "red"};
+        : "#FF7575"};
+    border-radius: 5px;
   }
 `;
 
 const HealthValue = styled.p<HealthValueProps>`
+  margin-bottom: 0;
+  margin-top: 3em;
+  text-align: center;
+
   color: ${(props) =>
     props.health > 50
       ? "green"
@@ -212,14 +219,14 @@ const ImgRight = styled.img<ImgProps>`
 `;
 
 const MiniLog = styled.p<MiniLogProps>`
-  font-size: 35px;
+  font-size: 30px;
   font-weight: 700;
   font-style: italic;
   margin: 0;
   padding: 0;
-  rotate: 10deg;
-  position: relative;
-  bottom: 100px;
-
+  rotate: 5deg;
+  position: absolute;
+  top: 0;
+  left: ${(props) => (props.side === "left" ? "50%" : "10%")};
   color: ${(props) => (props.lastLog === "Miss!" ? "black" : "red")};
 `;

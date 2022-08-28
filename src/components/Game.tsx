@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import Kodimon from "../assets/kodimon 1.png";
 import kodiLogo from "../assets/Kodi-logo.svg";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
@@ -11,7 +11,7 @@ import Menu from "./Menu";
 import Logs from "./Logs";
 import { selectPokemonOne } from "../features/pokemonOneSlice";
 import { selectPokemonTwo } from "../features/pokemonTwoSlice";
-import { setLogs, setLastLog } from "../features/logsSlice";
+import { setLogs, setLastLog, clearLogs } from "../features/logsSlice";
 
 type ArrowProps = {
   direction: number;
@@ -21,7 +21,11 @@ type OverlayProps = {
   isGameOver: boolean;
 };
 
-const Game = () => {
+type GameProps = {
+  fetchPokemons: () => void;
+};
+
+const Game: FC<GameProps> = ({ fetchPokemons }) => {
   const dispatch = useAppDispatch();
   const pokemonOne = useAppSelector(selectPokemonOne);
   const pokemonTwo = useAppSelector(selectPokemonTwo);
@@ -39,10 +43,14 @@ const Game = () => {
     if (!pokemonOne || !pokemonTwo) return;
     if (pokemonOne.stats[5].base_stat > pokemonTwo.stats[5].base_stat) {
       setDirection(180);
+    } else {
+      setDirection(0);
     }
+    
     setPokemonOneHealth(pokemonOne.stats[0].base_stat);
     setPokemonTwoHealth(pokemonTwo.stats[0].base_stat);
-  }, []);
+    dispatch(clearLogs());
+  }, [pokemonOne, pokemonTwo]);
 
   useEffect(() => {
     setAttackingPokemon(direction === 0 ? pokemonTwo : pokemonOne);
@@ -142,7 +150,7 @@ const Game = () => {
       </PokemonCardContainer>
 
       <MenuAndLogs>
-        <Menu />
+        <Menu fetchPokemons={fetchPokemons} />
         <Logs />
       </MenuAndLogs>
 
@@ -153,7 +161,7 @@ const Game = () => {
             : `${pokemonOne?.name} won!`}
         </Winner>
 
-        <Menu />
+        <Menu fetchPokemons={fetchPokemons} />
       </Overlay>
     </>
   );
@@ -166,7 +174,6 @@ const PokemonCardContainer = styled.div`
   width: 100%;
   justify-content: space-around;
   align-items: center;
-  margin: auto;
 
   p::first-letter {
     text-transform: capitalize;
@@ -183,7 +190,7 @@ const Attack = styled.div`
 
 const MenuAndLogs = styled.div`
   display: flex;
-  width: 70%;
+  width: 69%;
   justify-content: space-between;
 `;
 
