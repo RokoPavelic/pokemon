@@ -1,4 +1,8 @@
+Deployed version : https://kodimon.netlify.app/
+Tech stack used in project : React, Redux,TypeScript,Styled Components.
+
 # Getting Started with Create React App
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) TS template.
 
