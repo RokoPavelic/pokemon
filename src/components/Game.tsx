@@ -46,9 +46,11 @@ const Game: FC<GameProps> = ({ fetchPokemons }) => {
     } else {
       setDirection(0);
     }
-    
+
     setPokemonOneHealth(pokemonOne.stats[0].base_stat);
     setPokemonTwoHealth(pokemonTwo.stats[0].base_stat);
+    setAttackingPokemon(direction === 0 ? pokemonTwo : pokemonOne);
+    setDefendingPokemon(direction === 180 ? pokemonTwo : pokemonOne);
     dispatch(clearLogs());
   }, [pokemonOne, pokemonTwo]);
 
@@ -61,46 +63,6 @@ const Game: FC<GameProps> = ({ fetchPokemons }) => {
     if (!pokemonOne || !pokemonTwo || !attackingPokemon || !defendingPokemon)
       return;
 
-    let damage = 0;
-
-    const num = Math.floor(Math.random() * 10);
-
-    if (num > 2) {
-      damage =
-        (attackingPokemon.stats[1].base_stat / 2) *
-        (defendingPokemon.stats[2].base_stat / 100);
-
-      if (attackingPokemon.name === pokemonOne.name) {
-        const health = pokemonTwoHealth - damage;
-        setPokemonTwoHealth(health < 0 ? 0 : health);
-      } else {
-        const health = pokemonOneHealth - damage;
-        setPokemonOneHealth(health < 0 ? 0 : health);
-      }
-
-      dispatch(
-        setLogs(
-          `${attackingPokemon.name} attacked ${
-            defendingPokemon.name
-          } for ${Math.floor(damage)} DMG `
-        )
-      );
-      dispatch(setLastLog(`${Math.floor(damage)} dmg!`));
-    } else {
-      dispatch(
-        setLogs(`${attackingPokemon.name} missed ${defendingPokemon.name}`)
-      );
-      dispatch(setLastLog(`Miss!`));
-    }
-    setTimeout(() => dispatch(setLastLog("")), 1000);
-  };
-
-  useEffect(() => {
-    if (pokemonTwoHealth === 0) dispatch(setLogs(`${pokemonTwo?.name} died`));
-    if (pokemonOneHealth === 0) dispatch(setLogs(`${pokemonOne?.name} died`));
-  }, [pokemonTwoHealth, pokemonOneHealth]);
-
-  const handleAnimate = () => {
     setDisabled(true);
     setTimeout(() => setDisabled(false), 2000);
     if (direction === 0) {
@@ -110,8 +72,45 @@ const Game: FC<GameProps> = ({ fetchPokemons }) => {
     }
     setAnimate(true);
     setTimeout(() => setAnimate(false), 2000);
-    setTimeout(() => attack(), 1000);
+
+    setTimeout(() => {
+      let damage = 0;
+      const number = Math.floor(Math.random() * 10);
+
+      if (number > 2) {
+        damage =
+          (attackingPokemon.stats[1].base_stat / 2) *
+          (defendingPokemon.stats[2].base_stat / 100);
+
+        if (attackingPokemon.name === pokemonOne.name) {
+          const health = pokemonTwoHealth - damage;
+          setPokemonTwoHealth(health < 0 ? 0 : health);
+        } else {
+          const health = pokemonOneHealth - damage;
+          setPokemonOneHealth(health < 0 ? 0 : health);
+        }
+
+        dispatch(
+          setLogs(
+            `${attackingPokemon.name} attacked ${defendingPokemon.name}for
+           ${Math.floor(damage)} DMG `
+          )
+        );
+        dispatch(setLastLog(`${Math.floor(damage)} dmg!`));
+      } else {
+        dispatch(
+          setLogs(`${attackingPokemon.name} missed ${defendingPokemon.name}`)
+        );
+        dispatch(setLastLog(`Miss!`));
+      }
+      setTimeout(() => dispatch(setLastLog("")), 1000);
+    }, 1000);
   };
+
+  useEffect(() => {
+    if (pokemonTwoHealth === 0) dispatch(setLogs(`${pokemonTwo?.name} died`));
+    if (pokemonOneHealth === 0) dispatch(setLogs(`${pokemonOne?.name} died`));
+  }, [pokemonTwoHealth, pokemonOneHealth]);
 
   return (
     <>
@@ -135,7 +134,7 @@ const Game: FC<GameProps> = ({ fetchPokemons }) => {
             disabled={disabled}
             text="Attack"
             onClick={() => {
-              handleAnimate();
+              attack();
             }}
           />
         </Attack>
